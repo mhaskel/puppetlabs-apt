@@ -7,6 +7,7 @@ class apt(
   $keys     = {},
   $ppas     = {},
   $settings = {},
+  $collect  = true,
 ) inherits ::apt::params {
 
   $frequency_options = ['always','daily','weekly','reluctantly']
@@ -85,6 +86,11 @@ class apt(
     Exec <| title=='apt_update' |> {
       refreshonly => false,
     }
+  }
+
+  if $collect == true {
+    Apt::Ppa <||> -> Exec <| title=='apt_update' |> -> Package <||>
+    Apt::Setting <| notify_update = true |> -> Exec <| title=='apt_update' |> -> Package <||>
   }
 
   apt::setting { 'conf-update-stamp':
