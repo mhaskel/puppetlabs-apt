@@ -27,7 +27,6 @@ class apt(
 
   $_update = merge($::apt::update_defaults, $update)
   include 'apt::update'
-  Class['apt'] -> Class['apt::update']
 
   validate_hash($purge)
   if $purge['sources.list'] {
