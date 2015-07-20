@@ -89,8 +89,8 @@ class apt(
   }
 
   if $collect == true {
-    Apt::Ppa <||> -> Exec <| title=='apt_update' |> -> Package <||>
-    Apt::Setting <| notify_update = true |> -> Exec <| title=='apt_update' |> -> Package <||>
+    Apt::Ppa <||> ~> Class['apt_update'] ~> Package <||>
+    Apt::Setting <| notify_update = true |> ~> Class['apt_update'] ~> Package <||>
   }
 
   apt::setting { 'conf-update-stamp':

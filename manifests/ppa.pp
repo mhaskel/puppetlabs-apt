@@ -6,8 +6,6 @@ define apt::ppa(
   $package_name   = $::apt::ppa_package,
   $package_manage = false,
 ) {
-  Apt::Ppa[$title] -> Class['apt::update']
-
   unless $release {
     fail('lsbdistcodename fact not available: release parameter required')
   }
