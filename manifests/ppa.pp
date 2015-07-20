@@ -6,8 +6,6 @@ define apt::ppa(
   $package_name   = $::apt::ppa_package,
   $package_manage = false,
 ) {
-  Apt::Ppa[$title] -> Class['apt::update']
-
   unless $release {
     fail('lsbdistcodename fact not available: release parameter required')
   }
@@ -61,5 +59,11 @@ define apt::ppa(
       ensure => 'absent',
       notify => Class['apt::update'],
     }
+  }
+
+  # This is not traditional dependency containment for this anchor, just making
+  # sure classes depending on the PPA happen after the apt::update
+  anchor { "apt::ppa::${name}":
+    require => Class['apt::update'],
   }
 }

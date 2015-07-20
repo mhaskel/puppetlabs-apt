@@ -47,9 +47,14 @@ define apt::setting (
   $_ext  = $::apt::params::config_files[$setting_type]['ext']
 
   if $notify_update {
-    Apt::Setting[$title] -> Class['apt::update']
-
     $_notify = Class['apt::update']
+
+    # This is not being used to contain dependencies, mostly just to make sure
+    # any classes that depend on the apt::setting will happen _after_
+    # apt::update
+    anchor { "apt::setting::${name}":
+      require => Class['apt::update'],
+    }
   } else {
     $_notify = undef
   }
